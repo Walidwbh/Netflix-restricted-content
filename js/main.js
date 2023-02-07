@@ -1,6 +1,6 @@
 const inputs = Array.from(document.querySelectorAll("input"));
 let password = [];
-new Promise((resolve, reject)=>{
+let promise = new Promise((resolve, reject)=>{
 inputs.forEach((element, index)=>{
     element.addEventListener("input",(event)=>{
         if(event.target.value.length>0 & index < inputs.length-1){
@@ -25,7 +25,8 @@ inputs.forEach((element, index)=>{
             password.pop()
         }
     });
-})}).then(()=>{
+})});
+promise.then(()=>{
     let i = 5;
     let interval = setInterval((e)=>{
         i--;
@@ -37,9 +38,15 @@ inputs.forEach((element, index)=>{
         }
     },1000);
 }).catch(()=>{
-    document.querySelector(".pin .title").textContent="Incorrect PIN. Please try again.";
-    inputs.forEach((e)=>{
-        e.value = ""
-    });
-    inputs[0].focus();
+    // document.querySelector(".pin .title").textContent="Incorrect PIN. Please try again.";
+    // location.reload()
+    let i = 5;
+    let interval = setInterval((e)=>{
+        i--;
+        document.querySelector(".pin .title").textContent=`Incorrect PIN. Please try again after ${i}`;
+        if(i == 0 ){
+            clearInterval(interval);
+            location.reload()
+        }
+    },1000);
 })

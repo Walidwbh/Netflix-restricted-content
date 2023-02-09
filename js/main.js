@@ -3,11 +3,9 @@ const firstInput = document.querySelector(".inputs input:first-child");
 window.onload = ()=>{
     firstInput.focus();
 };
-// auto tab between inputs
 const inputs = Array.from(document.querySelectorAll("input"));
 let password = [];
-// make a promise to capture the input and then redirect if correct, reload if there is any catch
-let promise = new Promise((resolve, reject)=>{
+// auto tab between inputs
 inputs.forEach((element, index)=>{
     element.addEventListener("input",(event)=>{
         if(event.target.value.length>0 & index < inputs.length-1){
@@ -19,9 +17,9 @@ inputs.forEach((element, index)=>{
             password.push(event.target.value)
             //when we finish we check if password true we resolve if not we reject
             if(password.join("")=="1234"){
-                resolve();
+                correctPin()
             }else{
-                reject()
+                inCorrectPin()
             }
         }else if(event.inputType == "deleteContentBackward" & index > 0) {
             event.target.blur();
@@ -36,18 +34,18 @@ inputs.forEach((element, index)=>{
 // auto tab when pasting a password
 firstInput.addEventListener("paste", (e)=>{
     let copiedData = e.clipboardData.getData("text");
-    inputs.forEach(async (element, index)=>{
+    inputs.forEach((element, index)=>{
         element.value = copiedData[index];
         element.blur()
     })
-    console.log(e.clipboardData.getData("text"))
+    // console.log(e.clipboardData.getData("text"))
     if(e.clipboardData.getData("text")=="1234"){
-        resolve();
+        correctPin()
     }else{
-        reject()
+        inCorrectPin()
     }
 });
-}).then(()=>{
+function correctPin(){
     let i = 5;
     let interval = setInterval((e)=>{
         i--;
@@ -58,7 +56,8 @@ firstInput.addEventListener("paste", (e)=>{
             document.getElementById("background").classList.remove("background");
         }
     },1000);
-}).catch(()=>{
+}
+function inCorrectPin(){
     let i = 5;
     let interval = setInterval((e)=>{
         i--;
@@ -68,4 +67,4 @@ firstInput.addEventListener("paste", (e)=>{
             location.reload()
         }
     },1000);
-})
+}

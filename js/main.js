@@ -1,5 +1,12 @@
+// auto focus on input in load
+const firstInput = document.querySelector(".inputs input:first-child");
+window.onload = ()=>{
+    firstInput.focus();
+};
+// auto tab between inputs
 const inputs = Array.from(document.querySelectorAll("input"));
 let password = [];
+// make a promise to capture the input and then redirect if correct, reload if there is any catch
 let promise = new Promise((resolve, reject)=>{
 inputs.forEach((element, index)=>{
     element.addEventListener("input",(event)=>{
@@ -25,8 +32,22 @@ inputs.forEach((element, index)=>{
             password.pop()
         }
     });
-})});
-promise.then(()=>{
+});
+// auto tab when pasting a password
+firstInput.addEventListener("paste", (e)=>{
+    let copiedData = e.clipboardData.getData("text");
+    inputs.forEach(async (element, index)=>{
+        element.value = copiedData[index];
+        element.blur()
+    })
+    console.log(e.clipboardData.getData("text"))
+    if(e.clipboardData.getData("text")=="1234"){
+        resolve();
+    }else{
+        reject()
+    }
+});
+}).then(()=>{
     let i = 5;
     let interval = setInterval((e)=>{
         i--;
@@ -38,8 +59,6 @@ promise.then(()=>{
         }
     },1000);
 }).catch(()=>{
-    // document.querySelector(".pin .title").textContent="Incorrect PIN. Please try again.";
-    // location.reload()
     let i = 5;
     let interval = setInterval((e)=>{
         i--;

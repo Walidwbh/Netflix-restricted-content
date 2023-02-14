@@ -4,67 +4,47 @@ window.onload = ()=>{
     firstInput.focus();
 };
 const inputs = Array.from(document.querySelectorAll("input"));
+const title = document.querySelector(".title");
 let password = [];
-// auto tab between inputs
+// ---------------auto tab between inputs---------------------
 inputs.forEach((element, index)=>{
     element.addEventListener("input",(event)=>{
         if(event.target.value.length>0 & index < inputs.length-1){
-            event.target.blur();
-            element.nextElementSibling.focus();
+            moveToNext(element);
             password.push(event.target.value)
         }else if(index == inputs.length - 1){
-            event.target.blur();
-            password.push(event.target.value)
             //when we finish we check if password true we resolve if not we reject
-            if(password.join("")=="1234"){
-                correctPin()
-            }else{
-                inCorrectPin()
-            }
+            password.join("")=="1234" ? title.innerHTML = "Correct Pin" : title.innerHTML = "Incorrect Pin";
+            element.blur();
+            password.push(event.target.value)
         }else if(event.inputType == "deleteContentBackward" & index > 0) {
-            event.target.blur();
-            element.previousElementSibling.focus();
-            password.pop()
+            moveToPrevious(element);
+            password.pop();
         }else {
-            event.target.blur();
-            password.pop()
+            element.blur();
+            password.pop();
         }
     });
 });
-// auto tab when pasting a password
+// ---------------------auto tab when pasting a password---------------------
 firstInput.addEventListener("paste", (e)=>{
     let copiedData = e.clipboardData.getData("text");
     inputs.forEach((element, index)=>{
         element.value = copiedData[index];
         element.blur()
-    })
-    // console.log(e.clipboardData.getData("text"))
+    });
     if(e.clipboardData.getData("text")=="1234"){
-        correctPin()
+        title.innerHTML = "Correct Pin";
     }else{
-        inCorrectPin()
+        title.innerHTML = "Incorrect Pin";
     }
 });
-function correctPin(){
-    let i = 5;
-    let interval = setInterval((e)=>{
-        i--;
-        document.querySelector(".pin .title").textContent=`Correct PIN, Please wait ${i} seconds to be redirected`;
-        if(i == 0 ){
-            clearInterval(interval);
-            document.querySelector(".pin").style.display = "none";
-            document.getElementById("background").classList.remove("background");
-        }
-    },1000);
+// ------------------------------------------------------------------------------------------------
+function moveToNext(element){
+    element.blur();
+    element.nextElementSibling.focus();
 }
-function inCorrectPin(){
-    let i = 5;
-    let interval = setInterval((e)=>{
-        i--;
-        document.querySelector(".pin .title").textContent=`Incorrect PIN. Please try again after ${i}`;
-        if(i == 0 ){
-            clearInterval(interval);
-            location.reload()
-        }
-    },1000);
+function moveToPrevious(element){
+    element.blur();
+    element.previousElementSibling.focus();
 }

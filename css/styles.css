@@ -11,7 +11,7 @@ body {
     position: relative;
 }
 #background {
-    background-image: url(/images/lexa.jpg);
+    background-image: url(../images/lexa.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     height: 100vh;
